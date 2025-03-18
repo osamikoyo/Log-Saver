@@ -12,14 +12,14 @@ import (
 type Recorder struct{
 	OutputChan chan []byte
 	logger *logger.Logger
-	cfg *config.ConsumerConfig
+	cfg *config.ProducerConfig
 	inputs io.Reader
 }
 
-func Init(cfg *config.ConsumerConfig, logger *logger.Logger, outputCh chan []byte) *Recorder {
+func Init(cfg *config.ProducerConfig, logger *logger.Logger, outputCh chan []byte) *Recorder {
 	var input io.Reader
 
-	switch cfg.Loginput{
+	switch cfg.Input{
 	case "stdout":
 		input = os.Stdout
 	case "stderr":

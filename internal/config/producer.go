@@ -10,6 +10,7 @@ import (
 
 type ProducerConfig struct{
 	KafkaUrl string `yaml:"kafka_url"`
+	Input string `yaml:"input"`
 	ELSurl string `yaml:"els_url"`
 }
 
