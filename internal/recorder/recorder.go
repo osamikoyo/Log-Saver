@@ -1,6 +1,7 @@
 package recorder
 
 import (
+	"bufio"
 	"io"
 	"os"
 
@@ -30,5 +31,20 @@ func Init(cfg *config.ConsumerConfig, logger *logger.Logger, outputCh chan []byt
 		cfg: cfg,
 		logger: logger,
 		OutputChan: outputCh,
+	}
+}
+
+func (r *Recorder) Run() {
+	scanner := bufio.NewScanner(r.inputs)
+
+	scanner.Split(bufio.ScanLines)
+
+	for {
+		if scanner.Scan() {
+			line := scanner.Text()
+			r.OutputChan <- []byte(line	)
+		} else {
+			break
+		}
 	}
 }
