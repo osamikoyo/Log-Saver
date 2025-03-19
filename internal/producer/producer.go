@@ -12,7 +12,7 @@ import (
 type Producer struct{
 	logger *logger.Logger
 	producer sarama.SyncProducer
-	cfg *config.ProducerConfig
+	cfg *config.
 	outputCh chan []byte
 }
 
