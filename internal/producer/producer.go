@@ -12,16 +12,16 @@ import (
 type Producer struct{
 	logger *logger.Logger
 	producer sarama.SyncProducer
-	cfg *config.
+	cfg *config.Config
 	outputCh chan []byte
 }
 
-func Init(cfg *config.ProducerConfig, logger *logger.Logger, ch chan []byte) (*Producer, error) {
+func Init(cfg *config.Config, logger *logger.Logger, ch chan []byte) (*Producer, error) {
 	configSarama := sarama.NewConfig()
 	configSarama.Producer.Return.Successes = true
 
 	producer, err := sarama.NewSyncProducer(
-		[]string{cfg.KafkaUrl},
+		[]string{cfg.Producer.KafkaUrl},
 		configSarama,
 	)
 	defer producer.Close()

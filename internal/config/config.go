@@ -10,6 +10,7 @@ import (
 
 type Consumer struct{
 	KafkaUrl string `yaml:"kafka_url"`
+	ELSurl string `yaml:"els_url"`
 }
 
 type Producer struct{
@@ -19,6 +20,7 @@ type Producer struct{
 }
 
 type Config struct{
+	Topic string `yaml:"topic"`
 	Consumer `yaml:"consumer"`
 	Producer `yaml:"producer"`
 }
