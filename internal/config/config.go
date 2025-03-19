@@ -11,6 +11,7 @@ import (
 type Consumer struct{
 	KafkaUrl string `yaml:"kafka_url"`
 	ELSurl string `yaml:"els_url"`
+	IndexName string `yaml:"index_name"`
 }
 
 type Producer struct{

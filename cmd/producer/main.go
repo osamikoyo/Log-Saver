@@ -10,7 +10,7 @@ import (
 func main() {
 	logger := logger.Init()
 
-	cfg, err := config.InitPC()
+	cfg, err := config.Init()
 	if err != nil{
 		logger.Error(err.Error())
 		return

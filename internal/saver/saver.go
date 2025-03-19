@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"math/rand"
 	"time"
 
 	"github.com/bytedance/sonic"
 	"github.com/elastic/go-elasticsearch/v8"
+	"github.com/elastic/go-elasticsearch/v8/esapi"
 	"github.com/koyo-os/log-saver/internal/config"
 	"github.com/koyo-os/log-saver/pkg/logger"
 	"go.uber.org/zap/zapcore"
@@ -66,6 +68,20 @@ func (s *Saver) Save(b string) error {
 		if err := sonic.ConfigDefault.NewEncoder(&buf).Encode(&doc);err != nil{
 			return fmt.Errorf("cant marshal doc: %v", err)
 		}
+
+		req := esapi.IndexRequest{
+			Index:      s.cfg.Consumer.IndexName, 
+			DocumentID: fmt.Sprintf("%d", rand.Uint64()),         
+			Body:       &buf,
+			Refresh:    "true",
+		}
+
+		res, err := req.Do(s.ctx, s.client)
+		if err != nil{
+			return fmt.Errorf("cant add req: %v", err)
+		}
+
+		defer res.Body.Close()
 
 		return nil
 	} else {
