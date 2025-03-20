@@ -59,15 +59,21 @@ var (
 
 func (s *Saver) Save(b string) error {
 	if count > MAX_COUNTER {
+		s.logger.Info("counter get max result! Start saving...")
+
 		doc := map[string]string{
 			"date" : time.Now().Format("2006-01-02 15:04:05"),
 			"logs" : body, 
 		}
 
+		s.logger.Info("start encode doc")
+
 		var buf bytes.Buffer
 		if err := sonic.ConfigDefault.NewEncoder(&buf).Encode(&doc);err != nil{
 			return fmt.Errorf("cant marshal doc: %v", err)
 		}
+
+		s.logger.Info("setup index...")
 
 		req := esapi.IndexRequest{
 			Index:      s.cfg.Consumer.IndexName, 
@@ -76,12 +82,23 @@ func (s *Saver) Save(b string) error {
 			Refresh:    "true",
 		}
 
+		s.logger.Info("send request...")
+
 		res, err := req.Do(s.ctx, s.client)
 		if err != nil{
 			return fmt.Errorf("cant add req: %v", err)
 		}
 
 		defer res.Body.Close()
+
+		s.logger.Info("success!", zapcore.Field{
+			Key: "status",
+			Integer: int64(res.StatusCode),
+		},
+		zapcore.Field{
+			Key: "response",
+			String: res.String(),
+		})
 
 		return nil
 	} else {
